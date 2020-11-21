@@ -1,0 +1,19 @@
+{
+  "name": "cryptography-course",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lab1/constants.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VladaZhmurkevych/cryptography-course.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VladaZhmurkevych/cryptography-course/issues"
+  },
+  "homepage": "https://github.com/VladaZhmurkevych/cryptography-course#readme"
+}

@@ -1,4 +1,4 @@
-export const FREQUENCY_TABLE = {
+const FREQUENCY_TABLE = {
     e: 0.1202,
     t: 0.091,
     a: 0.0812,
@@ -27,4 +27,9 @@ export const FREQUENCY_TABLE = {
     z: 0.0007,
 }
 
-export const ALPHABET = Object.keys(FREQUENCY_TABLE);
+const ALPHABET = Object.keys(FREQUENCY_TABLE);
+
+module.exports = {
+    ALPHABET,
+    FREQUENCY_TABLE
+}
