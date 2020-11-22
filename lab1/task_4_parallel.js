@@ -1,6 +1,8 @@
 const {getKeyLength} = require('../lab1/task_2')
 const { generateInitialPopulation, selection, crossover, calculateScore, UPPER_CASE_ALPHABET } = require('../lab1/task_3');
-
+const {
+    Worker, isMainThread, parentPort, workerData
+} = require('worker_threads');
 const GENERATIONS_COUNT = 500;
 const POPULATION_SIZE = 100;
 
@@ -23,37 +25,31 @@ const fitness = (population, text, keys, index) => {
     })
 }
 
-const getKey = (text) => {
+const createPromisedWorker = (population, keys, index) => new Promise(resolve => {
+    const worker = new Worker('./lab1/lab_4_worker.js', { workerData: {
+            population, keys, index, text, POPULATION_SIZE
+        } })
+    worker.on('message', (selectedPopulation) => resolve(selectedPopulation))
+})
+
+const getKey = async (text) => {
     const alphabetsCount = getKeyLength(text);
     let currentPopulations = generateInitialPopulations(POPULATION_SIZE, alphabetsCount);
     for (let i = 0; i < GENERATIONS_COUNT; i++) {
         console.log(i)
         const keys = currentPopulations.map((population) => population.sort((a, b) => a.score - b.score)[0].key)
         console.time('START')
-
-        currentPopulations = currentPopulations.map((population, index) => {
-            fitness(population, text, keys, index);
-            const selectedPopulation = selection(population);
-
-            while (selectedPopulation.length < POPULATION_SIZE) {
-                crossover(selectedPopulation);
-            }
-
-            return selectedPopulation;
-        })
-
+        currentPopulations = await Promise.all(currentPopulations.map((population, index) => createPromisedWorker(population, keys, index)))
         console.timeEnd('START')
-
     }
 
     return currentPopulations.map(population => population.sort((a, b) => a.score - b.score)[0].key);
 }
 
+(async () => {
+    const key = await getKey(text);
+    console.log('KEY: ', key);
+    decode(text, key);
+})()
 
-
-
-
-const key = getKey(text);
-console.log('KEY: ', key);
-decode(text, key);
 
