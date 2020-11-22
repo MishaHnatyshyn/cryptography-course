@@ -27,7 +27,7 @@ const FREQUENCY_TABLE = {
     z: 0.0007,
 }
 
-const ALPHABET = Object.keys(FREQUENCY_TABLE);
+const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 module.exports = {
     ALPHABET,
