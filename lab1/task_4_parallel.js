@@ -5,6 +5,8 @@ const {
 } = require('worker_threads');
 const GENERATIONS_COUNT = 500;
 const POPULATION_SIZE = 100;
+const WorkerPool = require('./worker_pool')
+const os = require('os')
 
 const text = 'KZBWPFHRAFHMFSNYSMNOZYBYLLLYJFBGZYYYZYEKCJVSACAEFLMAJZQAZYHIJFUNHLCGCINWFIHHHTLNVZLSHSVOZDPYSMNYJXHMNODNHPATXFWGHZPGHCVRWYSNFUSPPETRJSIIZSAAOYLNEENGHYAMAZBYSMNSJRNGZGSEZLNGHTSTJMNSJRESFRPGQPSYFGSWZMBGQFBCCEZTTPOYNIVUJRVSZSCYSEYJWYHUJRVSZSCRNECPFHHZJBUHDHSNNZQKADMGFBPGBZUNVFIGNWLGCWSATVSSWWPGZHNETEBEJFBCZDPYJWOSFDVWOTANCZIHCYIMJSIGFQLYNZZSETSYSEUMHRLAAGSEFUSKBZUEJQVTDZVCFHLAAJSFJSCNFSJKCFBCFSPITQHZJLBMHECNHFHGNZIEWBLGNFMHNMHMFSVPVHSGGMBGCWSEZSZGSEPFQEIMQEZZJIOGPIOMNSSOFWSKCRLAAGSKNEAHBBSKKEVTZSSOHEUTTQYMCPHZJFHGPZQOZHLCFSVYNFYYSEZGNTVRAJVTEMPADZDSVHVYJWHGQFWKTSNYHTSZFYHMAEJMNLNGFQNFZWSKCCJHPEHZZSZGDZDSVHVYJWHGQFWKTSNYHTSZFYHMAEDNJZQAZSCHPYSKXLHMQZNKOIOKHYMKKEIKCGSGYBPHPECKCJJKNISTJJZMHTVRHQSGQMBWHTSPTHSNFQZKPRLYSZDYPEMGZILSDIOGGMNYZVSNHTAYGFBZZYJKQELSJXHGCJLSDTLNEHLYZHVRCJHZTYWAFGSHBZDTNRSESZVNJIVWFIVYSEJHFSLSHTLNQEIKQEASQJVYSEVYSEUYSMBWNSVYXEIKWYSYSEYKPESKNCGRHGSEZLNGHTSIZHSZZHCUJWARNEHZZIWHZDZMADNGPNSYFZUWZSLXJFBCGEANWHSYSEGGNIVPFLUGCEUWTENKCJNVTDPNXEIKWYSYSFHESFPAJSWGTYVSJIOKHRSKPEZMADLSDIVKKWSFHZBGEEATJLBOTDPMCPHHVZNYVZBGZSCHCEZZTWOOJMBYJSCYFRLSZSCYSEVYSEUNHZVHRFBCCZZYSEUGZDCGZDGMHDYNAFNZHTUGJJOEZBLYZDHYSHSGJMWZHWAFTIAAY';
 
@@ -32,6 +34,15 @@ const createPromisedWorker = (population, keys, index) => new Promise(resolve =>
     worker.on('message', (selectedPopulation) => resolve(selectedPopulation))
 })
 
+const workerPool = new WorkerPool(os.cpus().length, { POPULATION_SIZE, text });
+
+const runTaskInSeparateThread = (population, keys, index) => new Promise(resolve => {
+    workerPool.runTask({  population, keys, index }, (err, selectedPopulation) => {
+        resolve(selectedPopulation)
+    })
+})
+
+
 const getKey = async (text) => {
     const alphabetsCount = getKeyLength(text);
     let currentPopulations = generateInitialPopulations(POPULATION_SIZE, alphabetsCount);
@@ -39,8 +50,9 @@ const getKey = async (text) => {
         console.log(i)
         const keys = currentPopulations.map((population) => population.sort((a, b) => a.score - b.score)[0].key)
         console.time('START')
-        currentPopulations = await Promise.all(currentPopulations.map((population, index) => createPromisedWorker(population, keys, index)))
+        currentPopulations = await Promise.all(currentPopulations.map((population, index) => runTaskInSeparateThread(population, keys, index)))
         console.timeEnd('START')
+        console.log(currentPopulations.map(population => population.sort((a, b) => a.score - b.score)[0].key));
     }
 
     return currentPopulations.map(population => population.sort((a, b) => a.score - b.score)[0].key);
