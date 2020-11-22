@@ -57,5 +57,10 @@ const hexToString = (hex) => {
   }  return str;
 }
 
-const key = getRepeatingXorKey(hexToString(text))
-console.log(decode(hexToString(text), key))
+// const key = getRepeatingXorKey(hexToString(text))
+// console.log(decode(hexToString(text), key))
+
+module.exports = {
+  getIndexOfCoincidence,
+  getKeyLength
+}
