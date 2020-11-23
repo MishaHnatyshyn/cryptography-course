@@ -17,23 +17,6 @@ const generateInitialPopulations = (size, alphabetsCount) => {
     return [...new Array(alphabetsCount)].map(() => generateInitialPopulation(size))
 }
 
-const fitness = (population, text, keys, index) => {
-    population.forEach((variant) => {
-        const variantsKeys = [...keys];
-        variantsKeys[index] = variant.key;
-        const decodedText = decode(text, variantsKeys)
-
-        variant.score = calculateScore(decodedText);
-    })
-}
-
-const createPromisedWorker = (population, keys, index) => new Promise(resolve => {
-    const worker = new Worker('./lab1/lab_4_worker.js', { workerData: {
-            population, keys, index, text, POPULATION_SIZE
-        } })
-    worker.on('message', (selectedPopulation) => resolve(selectedPopulation))
-})
-
 const workerPool = new WorkerPool(os.cpus().length, { POPULATION_SIZE, text });
 
 const runTaskInSeparateThread = (population, keys, index) => new Promise(resolve => {
@@ -41,7 +24,6 @@ const runTaskInSeparateThread = (population, keys, index) => new Promise(resolve
         resolve(selectedPopulation)
     })
 })
-
 
 const getKey = async (text) => {
     const alphabetsCount = getKeyLength(text);
@@ -65,3 +47,8 @@ const getKey = async (text) => {
 })()
 
 
+// const decodedText = 'ADWZISBPZSBSULDYWQDQPUWYNVFYSSWIPUHYPUZGFKAMZMCNUVQWSDMWPUBUSSTLTVOIFEDZUEBJTIFLHDFMTLAQPWKYWQDYSXBSMZVLTCCXYSUITDKITMAPBULLUYLCIAYPSLNUPLCWGUFLOADITUCSZDWYWQDMSFDIPJLNPVDITILXSQDMSFZMUFKIDCLYUJLZPQWIDSWOFASXQCXYMEAASFAMPLOYWAHEBUBASFAMPLOPMAOCUPBTSGTJRPLLMDMGZWQIUGKIKDTLHSNIMRFIFRLWQOLMBRKIPPDNQAWNSSWOPWKYSRXMUWAZGICLFDNJFUNSSLNIUBFYMDSMOILYWATSTFFWZJLNUYLGKDTNSBAXRDAOUPFWZKLBSLOLULJGFSWOULKUQBBTSVWSTAOLTSBIMDNNBGFIMSQJMQBSULACHPLIVQWIFRLNPLSIWAKBDANSDASTSEXIIEXSMLLQURLGFFFWZJLGMACJKGLGAAAXPLLQTATXQBHSFCBTSSBIIDMQPPFOULAYMSHYWASIMIAPZKAXOQKWRDVMHPAYSRBIDSUGQLDYTILTUUBSZAJSMVDIUBDBPRLGFMJJIABTPLSIRDVMHPAYSRBIDSUGQLDYTILTUUBSZAVLSDMWPLOJIULGYVBSDDDGGEXGTUQGAANGFJLIXGKJIAOGFKJGMELXSKSSTIAPTBLIDQWZTILCQPLLUBSGIFFYWDVYIAQIPEFMREXIVQDYPOLLTICYVSWTPUJGDAFMSXBIFKFMRIFLOPFYPPAPFKBTQUUWUJLJKDVXMFLNWDALSEAZUEAYWAJJULFMTIFLDANGDACMDKAYWAAYWATYWQWZMLAYYANGBULYWAHGIALGMMGPTJLNPVDITILUPPLTPPOASRCPMABTPEUJPWSSZWDIINLYUDTZPLFHSSWOVACLBPLYWAGIMEACUVTIFATZQADGFKDVQWKLYANGBULYWSBNWSKWSLUIQUAMSEXGTFLGIASSZWFMREAGARLBTDWIOACXSVWQQWKSFCBJHDDYHDWIPLOJFASTQRXQSQWYSLOYUFFMPLOYWAAYWATLTDAJCSWOFDSYWATIPWOIPWGSTWHLZSDTTITISKXNPGFYPWBYWPLISQUTTRCBQECWX'
+//
+// console.time('TOTAL')
+// calculateScore(decodedText)
+// console.timeEnd('TOTAL')
