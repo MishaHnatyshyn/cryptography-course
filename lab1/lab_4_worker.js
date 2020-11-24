@@ -6,7 +6,7 @@ const { selection, crossover, calculateScore, UPPER_CASE_ALPHABET } = require('.
 
 const { text, POPULATION_SIZE } = workerData
 
-const decode = (text, keys) => text.split('').map((letter, index) => UPPER_CASE_ALPHABET[keys[index % keys.length].indexOf(letter)]).join('');
+const decode = (text, keys) => text.split('').map((letter, index) => keys[index % keys.length][UPPER_CASE_ALPHABET.indexOf(letter)]).join('');
 
 const fitness = (population, text, keys, index) => {
   population.forEach((variant) => {
@@ -17,10 +17,9 @@ const fitness = (population, text, keys, index) => {
     variant.score = calculateScore(decodedText);
   })
 }
+
 parentPort.on('message', ({ population, keys, index}) => {
-  console.time('FITNESS');
   fitness(population, text, keys, index);
-  console.timeEnd('FITNESS');
 
   const selectedPopulation = selection(population);
 
