@@ -12,6 +12,9 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "uuid": "^8.3.1"
+  },
   "bugs": {
     "url": "https://github.com/VladaZhmurkevych/cryptography-course/issues"
   },
