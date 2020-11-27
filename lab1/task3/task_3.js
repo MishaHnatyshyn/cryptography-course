@@ -3,7 +3,7 @@ const fs = require('fs')
 const { ALPHABET } = require('../constants')
 
 const UPPER_CASE_ALPHABET = ALPHABET.map(char => char.toUpperCase()).join('');
-const GENERATIONS_COUNT = 1000;
+const GENERATIONS_COUNT = 500;
 const POPULATION_SIZE = 300;
 const PROBABILITY_OF_MUTATION = 0.6;
 const PROBABILITY_OF_CROSSOVER = 0.65;
@@ -131,9 +131,7 @@ const crossover = (population) => {
         if (Math.random() > 1 - PROBABILITY_OF_MUTATION) {
             child = performMutation(child);
         }
-        if (!population.some(item => item.key === child)) {
-            population.push({ key: child, score: 0 });
-        }
+        population.push({ key: child, score: 0 });
     }
 };
 

@@ -1,6 +1,6 @@
 const {getKeyLength} = require('../task2/task_2')
 const { generateInitialPopulation, UPPER_CASE_ALPHABET, extractNGram, calculateNGramsFrequencies, BIGRAMS, TRIGRAMS } = require('../task3/task_3');
-const GENERATIONS_COUNT = 1000;
+const GENERATIONS_COUNT = 500;
 const POPULATION_SIZE = 300;
 const WorkerPool = require('./worker_pool')
 const os = require('os')
