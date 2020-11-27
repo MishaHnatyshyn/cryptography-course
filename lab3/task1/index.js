@@ -3,7 +3,11 @@ const {createAccount, makeBet} = require('../api');
 const MILLION = 1_000_000;
 const M = 2 ** 32;
 
-const getPositiveMod = (a, b) => ((a % b) + b) % b;
+const abs = (value) => {
+    return value >= 0 ? value : -value;
+};
+
+const getPositiveMod = (a, b) => a < 0 ? b - abs(a) % b : a % b;
 
 const extendedGcd = (a, b) => {
     let [oldR, r] = [a, b];
@@ -25,7 +29,7 @@ const modInverse = (b, n) => {
     return gcd === 1 ? getPositiveMod(s, n) : null;
 };
 
-const getIsOutOfRange = (value) => Math.abs(value) > 2 ** 31
+const getIsOutOfRange = (value) => Math.abs(value) > 2 ** 31;
 
 const calculateNextValue = (a, number, c) => {
     const result = (a * number + c) % M;
@@ -37,7 +41,7 @@ const calculateNextValue = (a, number, c) => {
 const getMultiplier = ([first, second, third], m) => {
     const mod = modInverse(second - first, m);
     if (!mod) return null;
-    const diff = BigInt((third - second))
+    const diff = BigInt((third - second));
     return Number(getPositiveMod(diff * BigInt(mod), BigInt(m)));
 }
 
@@ -75,6 +79,7 @@ const becomeMillionaire = async () => {
         money = bet.account.money;
     } while (money < MILLION)
 
+    console.log('bet', bet)
     console.log('Current money: ', money)
 }
 

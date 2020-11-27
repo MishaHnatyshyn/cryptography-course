@@ -45,7 +45,6 @@ const createHackedGenerator = function* (states) {
     const generator = new MersenneTwister();
 
     generator.mt = hackedStates;
-    generator.mti = MERSENNE_TWISTER_STATES_COUNT;
 
     while (true) {
         yield generator.random_int();
@@ -66,6 +65,7 @@ const becomeMillionaire = async () => {
         money = bet.account.money;
     } while (money < MILLION)
 
+    console.log(bet);
     console.log('Current money: ', money)
 }
 
