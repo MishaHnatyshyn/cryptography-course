@@ -14,7 +14,7 @@ const getMersenneTwisterGenerator = async (id, prevTime, nextTime) => {
         generator = new MersenneTwister(seed);
         newGeneratedValue = generator.random_int();
         seed++;
-    } while (newGeneratedValue !== response.realNumber && seed < nextTime)
+    } while (newGeneratedValue !== response.realNumber && seed < nextTime + 1)
     return generator;
 }
 
