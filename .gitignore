@@ -104,3 +104,6 @@ dist
 .tern-port
 
 .idea/
+
+# Environment variables
+lab5/server/.env
