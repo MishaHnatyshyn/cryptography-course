@@ -1,6 +1,6 @@
 class AuthController {
     constructor(authService) {
-        this.authSerivce = authService;
+        this.authService = authService;
         this.login = this.login.bind(this);
         this.register = this.register.bind(this);
     }
@@ -13,7 +13,7 @@ class AuthController {
         }
 
         try {
-           const user = await this.authSerivce.validateUserCredentials(username, password);
+           const user = await this.authService.validateUserCredentials(username, password);
            res.status(200).json({ message: 'Successful login!', data: user })
         } catch (e) {
             if (e.name === 'WrongCredentialsError') {
@@ -31,10 +31,11 @@ class AuthController {
         }
 
         try {
-            this.authSerivce.validatePassword(password);
-            const user = await this.authSerivce.createUser(username, password);
+            this.authService.validatePassword(password);
+            const user = await this.authService.createUser(username, password);
             res.status(201).json({ message: 'New user created!', data: user })
         } catch (e) {
+            console.log(e);
             if (e.name === 'ValidationError') {
                 return res.status(400).end(e.message)
             }

@@ -7,9 +7,9 @@ class AuthService {
     }
 
     async createUser(username, password) {
-        const exitingUser = await this.userModel.findOne({ username })
+        const exitingUser = await this.userModel.findOne({ where: {username} })
         if (exitingUser) {
-            throw UserAlreadyExistsError('User with provided username already exists')
+            throw new UserAlreadyExistsError('User with provided username already exists')
         }
         const hashedPassword = await this.hashService.hash(password);
         const user = await this.userModel.create({ username, password: hashedPassword });

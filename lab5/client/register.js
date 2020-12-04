@@ -16,7 +16,7 @@ const handleRegister = async (e) => {
         return alert('Password field is required!')
     }
     if (!passwordRepeat) {
-        return alert('Password field is required!')
+        return alert('Repeat password field is required!')
     }
     if (password !== passwordRepeat) {
         return alert('Password should equals Repeated Password')
