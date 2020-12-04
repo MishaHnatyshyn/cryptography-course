@@ -106,4 +106,4 @@ dist
 .idea/
 
 # Environment variables
-lab5/server/.env
+lab5-6/server/.env

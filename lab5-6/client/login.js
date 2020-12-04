@@ -22,13 +22,16 @@ const handleLogin = async (e) => {
     })
 
     try {
-        await fetch(API_URL + '/login',{
+        const response = await fetch(API_URL + '/login',{
             body,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
+        if (!response.ok) {
+            return alert('Wrong credentials!')
+        }
         alert('Successful login!')
     } catch (e) {
         alert('Wrong credentials!')

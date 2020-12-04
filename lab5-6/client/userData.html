@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UserData</title>
+</head>
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        width: 200px;
+    }
+</style>
+<body>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+
+    <form id="user-data">
+        <h3>User data</h3>
+        <label for="username">
+            Username:
+            <input type="text" id="username">
+        </label>
+        <label for="password">
+            Password:
+            <input type="password" id="password">
+        </label>
+        <label for="phone">
+            Phone number:
+            <input type="tel" id="phone">
+        </label>
+        <label for="email">
+            Email:
+            <input type="email" id="email">
+        </label>
+        <label for="address">
+            Address:
+            <input type="text" id="address">
+        </label>
+        <button type="submit">Update data</button>
+        <button type="button" id="getDataButton">Get data</button>
+    </form>
+</body>
+<script src="userData.js"></script>
+</html>

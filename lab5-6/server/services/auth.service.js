@@ -1,9 +1,10 @@
 const { UserAlreadyExistsError, WrongCredentialsError, ValidationError } = require('./auth.errors');
 
 class AuthService {
-    constructor(userModel, hashService) {
+    constructor(userModel, hashService, userDataModel) {
         this.userModel = userModel;
         this.hashService = hashService;
+        this.userDataModel = userDataModel;
     }
 
     async createUser(username, password) {
@@ -13,20 +14,21 @@ class AuthService {
         }
         const hashedPassword = await this.hashService.hash(password);
         const user = await this.userModel.create({ username, password: hashedPassword });
+        await this.userDataModel.create({UserId: user.id, metadata: JSON.stringify({})});
         return { id: user.id, username: user.username};
     }
 
     async validateUserCredentials(username, password) {
-        const user = await this.userModel.findOne({ where: { username }, attributes: ['id', 'username']})
+        const user = await this.userModel.findOne({ where: { username }, attributes: ['id', 'username', 'password']})
         if (!user) {
             throw new WrongCredentialsError('No user found with provided username')
         }
 
-        const isPasswordCorrect = this.hashService.compare(password, user.password);
+        const isPasswordCorrect = await this.hashService.compare(password, user.password);
         if (!isPasswordCorrect) {
-            throw WrongCredentialsError('Password is wrong');
+            throw new WrongCredentialsError('Password is wrong');
         }
-        return user;
+        return {id: user.id, username: user.username};
     }
 
     validatePassword(password) {

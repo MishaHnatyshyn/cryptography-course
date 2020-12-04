@@ -12,9 +12,10 @@
     }
 </style>
 <body>
-<a href="register.html">Register</a>
-<form id="login-form">
-    <h3>Login</h3>
+<a href="login.html">Login</a>
+<a href="userData.html">User data</a>
+<form id="registration-form">
+    <h3>Register</h3>
     <label for="username">
         Username:
         <input type="text" id="username">
@@ -23,8 +24,12 @@
         Password:
         <input type="password" id="password">
     </label>
-    <button type="submit">Log in</button>
+    <label for="password-repeat">
+        Repeat Password:
+        <input type="password" id="password-repeat">
+    </label>
+    <button type="submit">Register</button>
 </form>
-<script src="login.js"></script>
+<script src="register.js"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@ class HashService {
     async compare(text, hashedText) {
         const digest = this.getSha3Digest(text)
         try {
-            await argon2.verify(digest, hashedText);
+            await argon2.verify(hashedText, digest);
             return true
         } catch (e) {
             return false
