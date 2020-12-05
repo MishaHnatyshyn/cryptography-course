@@ -35,6 +35,7 @@ class AuthController {
             const user = await this.authService.createUser(username, password);
             res.status(201).json({ message: 'New user created!', data: user })
         } catch (e) {
+            console.log(e);
             if (e.name === 'ValidationError') {
                 return res.status(400).end(e.message)
             }

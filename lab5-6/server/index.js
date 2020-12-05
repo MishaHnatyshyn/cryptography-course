@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '.env')})
 
 const AuthService = require('./services/auth.service');
@@ -18,8 +19,10 @@ const PORT = 8080;
 app.use(cors())
 app.use(express.json())
 
+const commonPasswords = fs.readFileSync(path.join(__dirname, 'utils', 'passwords.txt'), 'utf8').split('\n');
+
 const hashService = new HashService()
-const authService = new AuthService(UserModel, hashService, UserDataModel);
+const authService = new AuthService(UserModel, hashService, UserDataModel, commonPasswords);
 const dataEncryptionService = new DataEncryptionService(KeyStorageModel);
 const userDataService = new UserDataService(UserDataModel, dataEncryptionService);
 const authController = new AuthController(authService);

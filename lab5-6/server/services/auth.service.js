@@ -1,10 +1,11 @@
 const { UserAlreadyExistsError, WrongCredentialsError, ValidationError } = require('./auth.errors');
 
 class AuthService {
-    constructor(userModel, hashService, userDataModel) {
+    constructor(userModel, hashService, userDataModel, commonPasswords) {
         this.userModel = userModel;
         this.hashService = hashService;
         this.userDataModel = userDataModel;
+        this.commonPasswords = commonPasswords
     }
 
     async createUser(username, password) {
@@ -33,19 +34,10 @@ class AuthService {
 
     validatePassword(password) {
         if (password.length < 8) {
-            throw ValidationError('Min password length is 8!')
+            throw new ValidationError('Min password length is 8!')
         }
-        if (!/[A-Z]/.test(password)) {
-            throw ValidationError('At least one capital letter is required')
-        }
-        if (!/[a-z]/.test(password)) {
-            throw ValidationError('At least one small letter is required')
-        }
-        if (!/[0-9]/.test(password)) {
-            throw ValidationError('At least one number is required')
-        }
-        if (!/[\!\@\#\$\%\^\&\*\(\)\_\+\{\}\[\]\:\;]/.test(password)) {
-            throw ValidationError('At least one special character is required')
+        if (this.commonPasswords.includes(password)) {
+            throw new ValidationError('Password is too weak!')
         }
     }
 }

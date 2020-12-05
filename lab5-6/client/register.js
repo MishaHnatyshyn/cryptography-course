@@ -24,18 +24,6 @@ const handleRegister = async (e) => {
     if (password.length < 8) {
         return alert('Min password length is 8!')
     }
-    if (!/[A-Z]/.test(password)) {
-        return alert('At least one capital letter is required')
-    }
-    if (!/[a-z]/.test(password)) {
-        return alert('At least one small letter is required')
-    }
-    if (!/[0-9]/.test(password)) {
-        return alert('At least one number is required')
-    }
-    if (!/[\!\@\#\$\%\^\&\*\(\)\_\+\{\}\[\]\:\;]/.test(password)) {
-        return alert('At least one special character is required')
-    }
 
     const body = JSON.stringify({
         username,
@@ -43,13 +31,17 @@ const handleRegister = async (e) => {
     })
 
     try {
-        await fetch(API_URL + '/register', {
+        const response = await fetch(API_URL + '/register', {
             body,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
+        if (!response.ok) {
+            const message = await response.text();
+            return alert(message);
+        }
         alert('Successful register!')
     } catch (e) {
         alert('Something went wrong!')
