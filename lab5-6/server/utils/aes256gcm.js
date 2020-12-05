@@ -9,11 +9,7 @@ const encrypt = (data, key) => {
         const cipher = crypto.createCipheriv(ALGORITHM, key, nonce);
         let encryptedData = cipher.update(data[field], 'utf8', 'hex');
         encryptedData += cipher.final('hex');
-        result[field] = {
-            data: encryptedData,
-            nonce: nonce.toString('hex'),
-            authTag: cipher.getAuthTag().toString('hex')
-        }
+        result[field] = `${encryptedData}.${nonce.toString('hex')}.${cipher.getAuthTag().toString('hex')}`
     })
     return result;
 };
@@ -21,9 +17,13 @@ const encrypt = (data, key) => {
 const decrypt = (encryptedData, key) => {
     const result = {};
     Object.keys(encryptedData).forEach((field) => {
-        const decipher = crypto.createDecipheriv(ALGORITHM, key, Buffer.from(encryptedData[field].nonce, 'hex'));
-        decipher.setAuthTag(Buffer.from(encryptedData[field].authTag, 'hex'));
-        let decryptedData = decipher.update(encryptedData[field].data, 'hex', 'utf8');
+        const [data, nonce, authTag] = encryptedData[field].split('.');
+        if(!nonce && !authTag) {
+            return result[field] = '';
+        }
+        const decipher = crypto.createDecipheriv(ALGORITHM, key, Buffer.from(nonce, 'hex'));
+        decipher.setAuthTag(Buffer.from(authTag, 'hex'));
+        let decryptedData = decipher.update(data, 'hex', 'utf8');
         decryptedData += decipher.final('utf8');
         result[field] = decryptedData;
     })

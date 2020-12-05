@@ -15,7 +15,7 @@ class AuthService {
         }
         const hashedPassword = await this.hashService.hash(password);
         const user = await this.userModel.create({ username, password: hashedPassword });
-        await this.userDataModel.create({UserId: user.id, metadata: JSON.stringify({})});
+        await this.userDataModel.create({UserId: user.id});
         return { id: user.id, username: user.username};
     }
 

@@ -17,11 +17,7 @@ const createUserDataModel = (sequelize) => sequelize.define('UserData', {
     address: {
         type: DataTypes.TEXT,
         allowNull: true
-    },
-    metadata: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
+    }
 }, {
     tableName: 'user_data',
 })

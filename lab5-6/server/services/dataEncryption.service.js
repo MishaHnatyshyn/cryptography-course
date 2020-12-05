@@ -24,8 +24,11 @@ class DataEncryptionService {
     }
 
     async decrypt(userId, encryptedData) {
-        const { DEK } = await this.keyStorageModel.findOne({where: {userId}});
-        const decryptedKey = await this.decryptDEK(DEK);
+        const keyData = await this.keyStorageModel.findOne({where: {userId}});
+        if(!keyData) {
+            return encryptedData
+        }
+        const decryptedKey = await this.decryptDEK(keyData.DEK);
         return decrypt(encryptedData, decryptedKey);
     }
 
