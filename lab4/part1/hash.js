@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 const getSha1Hash = (data) => {
     const salt = crypto.randomBytes(16).toString('hex');
-    const sha1sum = crypto.createHash('md5');
+    const sha1sum = crypto.createHash('sha1');
     sha1sum.update(data + salt);
     return `${sha1sum.digest('hex')},${salt}`
 }
